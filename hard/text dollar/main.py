@@ -43,14 +43,7 @@ def thousand(_int,pass_thru='n'):
             single(_int[:-3],pass_thru='n') 
         sys.stdout.write("Thousand")
     hundred(_int[-3:],pass_thru)
-    
-#def thousand(_int,pass_thru='n'):
-#    if _int[:-3] == '000':  return hundred(_int[-3:],pass_thru)##pass the last single number len==1  // take with it the current state of pass_tru
-#    if _int[0] == '0': tens(_int[-2:],pass_thru)##pass the tenth number len==2// take with it the current state of pass_tru
-#    if len(_int[:-3]) == 2: tens(_int,pass_thru)
-#    if len(_int[:-3]) == 1: single(_int[:-3],pass_thru)
-#    sys.stdout.write("Thousand")                
-#    return hundred(_int[-3:],pass_thru) # continue spelling the remaining amount
+
         
 def hundred(_int,pass_thru='n'):
     if int(_int) != 0:
@@ -65,18 +58,7 @@ def hundred(_int,pass_thru='n'):
         sys.stdout.write("Hundred") 
         return tens(_int[-2:],pass_thru)
     return single(_int[-1],pass_thru)
- #   tens(_int[-2:],pass_thru) # continue spelling the remaining amount    
-#    if pass_thru == 'n':    
-#        if len(_int) == 2: return tens(_int,pass_thru)
-#        if len(_int) == 1: return single(_int,pass_thru)
-#        if len(_int) == 3: return single(_int[0],pass_thru)#dont pass through; this is the text for the number of hundreds
-#    else:
-#        if len(_int) == 2: tens(_int,pass_thru)
-#        if len(_int) == 1: single(_int,pass_thru)
-#        if len(_int) == 3: single(_int[0],pass_thru)        
-#    sys.stdout.write("Hundred")                
-#    tens(_int[-2:],pass_thru) # continue spelling the remaining amount
-            
+
 
 def tens(_int,pass_thru='n'):
     if _int[0]  == '0':
@@ -160,6 +142,9 @@ with open(data_file, 'r') as input_file:
     for line in lines:
         if line == '0':
             sys.stdout.write("Zero")
+        if int(line) >= 1000000000:
+            sys.stdout.write("Number to large to convert.\n")
+            continue
         changeToText(line)
         
         
