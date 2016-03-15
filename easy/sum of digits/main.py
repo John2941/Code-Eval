@@ -26,22 +26,14 @@ Print to stdout, the sum of the numbers that make up the integer, one per line. 
 import os
 import sys
 
-
 data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
 
-# input_file =  open(sys.argv[1],'r')
-input_file =  open(data_file,'r')
-line = input_file.readline().strip('\n')
+# with open(sys.argv[1],'r') as input_file:
+with open(data_file, 'r') as input_file:
+    data = [x for x in input_file.read().split('\n')]
 
-while True:
-    temp = []
-    for x in xrange(len(line)):
-        temp.append(x)
-    else:
-        print sum(temp)
-
-    line = input_file.readline().strip('\n')
-    if len(line) == 0:
-        input_file.close()
-        break
-    
+for x in data:
+    tmp = []
+    for y in x:
+        tmp.append(int(y))
+    sys.stdout.write( str(sum(tmp)) + "\n")

@@ -34,8 +34,8 @@ data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
 with open(data_file, 'r') as input_file:
 	for x in input_file.readlines():
 		number, first_el, second_el = x.strip('\n').split(',')
-		binary = bin(int(number))
-		if binary[int(first_el)] == binary[int(second_el)]:
+		binary = bin(int(number))[2:]  # [2:] necessary to get rid of the 0b prefix
+		if binary[-1 * (int(first_el))] == binary[-1 * (int(second_el))]:
 			sys.stdout.write( 'true\n' )
 		else:
 			sys.stdout.write( 'false\n' )

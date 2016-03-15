@@ -22,7 +22,7 @@ while True:
     count_till = int(line[2])
     for x in xrange(count_till):
         x += 1
-        if x % (first_div and second_div) == 0:
+        if x % first_div == 0 and x % second_div == 0:
             sys.stdout.write('FB')
         elif x % first_div == 0:
             sys.stdout.write('F')

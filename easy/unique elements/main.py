@@ -31,4 +31,7 @@ data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
 # with open(sys.argv[1],'r') as input_file:
 with open(data_file, 'r') as input_file:
 	for x in input_file.readlines():
-		print ','.join(set(x.strip('\n').split(',')))
+		singles = set(x.strip('\n').split(','))
+		singles = [int(x) for x in singles]
+		singles = sorted(singles)
+		print ','.join(str(x) for x in singles)
