@@ -11,12 +11,9 @@ import math
 import sys
 
 def columns(_int):
-
 	if _int == 0: return None
 	if _int < 27: return (chr(_int + 64), _int)
 	number = int(_int)
-	number_copy = int(number)
-	col = 0
 	x = 0
 	tmp = 0
 	while True:
@@ -42,7 +39,6 @@ def columns(_int):
 					column_character_num = int(math.ceil(tmp)) - 1
 		else:
 			column_character_num = int(tmp)
-		#column_character_num = int(number  / (26 ** x))  if float(number ) / (26.0 ** float(x)) != 26.0 or x == 0 else 25
 		number -=((26**x) * column_character_num)
 		column_title += chr(column_character_num + 64)
 	return (column_title, _int)
