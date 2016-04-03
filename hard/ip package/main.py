@@ -10,6 +10,7 @@ recalculate the ip checksum after changing the source and destination ip from a 
 """
 
 import sys
+import os
 
 class packet(object):
 
@@ -105,12 +106,19 @@ class packet(object):
 		else:
 			return False
 
-# with open(sys.argv[1],'r') as input_file:
-with open("F:\\Coding\\Code Eval\\test_data", 'r') as input_file:
-	for x in input_file.read().split('\n'):
-		new_sip = x.split()[0]
-		new_dip = x.split()[1]
-		hex_packet = x.split()[2:]
-		package = packet(hex_packet)
-		new_ip_header = package.change_IPs(new_sip, new_dip)
-		sys.stdout.write( new_ip_header + '\n' )
+try:
+	data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
+	with open(data_file, 'r') as input_file:
+		data = [x.strip('\n') for x in input_file.read().split('\n') if x]
+except IOError:
+	with open(sys.argv[1],'r') as input_file:
+		data = [x.strip('\n') for x in input_file.read().split('\n') if x]
+
+
+for line in data:
+	new_sip = x.split()[0]
+	new_dip = x.split()[1]
+	hex_packet = x.split()[2:]
+	package = packet(hex_packet)
+	new_ip_header = package.change_IPs(new_sip, new_dip)
+	sys.stdout.write( new_ip_header + '\n' )
