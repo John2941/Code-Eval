@@ -1,0 +1,6 @@
+http://abc.com:810/~smith/home.html;http://ABC.com:443/%7Esmith/home.html
+http://abc.com:80/~smith/home.html;http://ABC.com:443/%7Esmith/home.html
+http://abc.com:80/~smith/home.html;http://ABC.com/%7Esmith/home.html
+http://abc.com/~smith/home.html;http://ABC.com/%7Esmith/home.html
+http://abc.com:80/~smith/home.html;http://ABC.com/%7Esmith/home.html
+
