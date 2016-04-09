@@ -5,7 +5,7 @@
 @time - 6:04 PM
 @url - https://www.codeeval.com/open_challenges/42/
 
-still getting wrong amount of uglies for 12345
+did not receive all credit, not sure what areas are wrong.
 
 """
 
@@ -13,39 +13,80 @@ import os
 import sys
 
 def generate_num_combos(number):
-	og_num = str(number)
-	number = str(number)
-	combos = []
-	for a in xrange(len(number)):
-		# revolves around the number; 123 -> 231 -> 312
-		#number = og_num[a:] + og_num[:a]
-		pass
-	split = [str(len(number))]
-	combos.append((number,))
-	finished = ['1'] * len(number)
-	i = 1
-	while split != finished:
-		# while calculates all possible index configurations
-		if int(split[-i]) > 1:
-			#list(set(split[-i + 1:])) == ['1'] or len(split) == 1
-			if i == 1:
-				split[-i] = str(int(split[-i]) - 1)
-				split.append('1')
+	"""
+	ALL EXAMPLES DONE WITH NUMBER = 7
+	:param number:
+	:return: a list of all number configurations that will be used to add
+				and/or subtract
+	"""
+	len_num = len(str(number))
+	number_pre_premutations = [[str(len_num)],[str(len_num - 1), '1']] # initializes with [7,61]
+	index = 1
+	while number_pre_premutations[-1] != ['1'] * len(str(number)):
+		current_perm = number_pre_premutations[-1]
+		set_list = set(current_perm[1:])
+		if list(set_list) == ['1']:
+			new_first_num = [str(int(current_perm[0]) - 1)]
+			while True:
+				current_sum = sum(int(x) for x in new_first_num)
+				if int(new_first_num[0]) > len_num / 2:
+					new_first_num.append( str(len_num - int(new_first_num[0])) )
+					number_pre_premutations.append(new_first_num)
+					break
+				elif current_sum == len_num:
+					number_pre_premutations.append(new_first_num)
+					break
+				elif current_sum + int(new_first_num[0]) > len_num:
+					new_first_num.append( str(len_num - current_sum) )
+					number_pre_premutations.append(new_first_num)
+					break
+				else:
+					new_first_num.append( new_first_num[0] )
+			index = 1
+			continue
+		if current_perm[-index] != '1':
+			if index == 1:
+				current_perm = [current_perm[:-index][0], str(int(current_perm[-index]) - 1)]
 			else:
-				split[-i] = str(int(split[-i]) - 1)
-				split[-i + 1] = str(int(split[-i + 1]) + 1)
-			i = 1
-			tmp = 0
-			_list = []
-			for x in split:
-				# appends the index configuration using the values at the
-				#   specified indexes from number
-				_list.append(number[tmp:tmp + int(x)])
-				tmp += int(x)
-			combos.append(tuple(_list))
+				prev_current_perm = current_perm
+				current_perm = [current_perm[:-index][0], str(int(current_perm[-index]) - 1)]
+				current_perm.extend(prev_current_perm[-(index -1):])
+			current_perm.append( '1' )
+			index = 1
+			number_pre_premutations.append(current_perm)
 		else:
-			i += 1
-	return combos
+			index += 1
+	number_pre_premutations = combinations_of_perms( number_pre_premutations)
+	real_num_perms = change_index_to_actual_numbers( number_pre_premutations, number )
+	return real_num_perms
+
+def combinations_of_perms(_list):
+	all_perms = [_list[0]]
+	for elements in _list[1:]:
+		# if len(elements) == 1:
+		# 	all_perms.append(elements)
+		# 	continue
+		last = None
+		# skip successive numbers
+		for x in xrange(len(elements)):
+			add = elements[x:] + elements [:x]
+			if add not in all_perms:
+				all_perms.append( add )
+			last = elements[x]
+
+	return all_perms
+
+def change_index_to_actual_numbers(index_perms, number):
+	real_num_perms = [[number]]
+	for element in index_perms[1:]:
+		# skip first one because its the entire number
+		real_num = []
+		index_count = 0
+		for index in element:
+			real_num.append( number[index_count: index_count + int(index)] )
+			index_count += int(index)
+		real_num_perms.append(real_num)
+	return real_num_perms
 
 
 def generate_arithmetic(combinations):
@@ -62,9 +103,11 @@ def generate_arithmetic(combinations):
 				sum_of_combos.append( arithmetic(sets_of_nums, config) )
 				#print config,
 				if i == 1:
+					# Means the subtraction and addition operation has already been
+					#	preformed.
 					config[-1] = '1'
 				else:
-					config = config[:-i]
+					config = config[:-i] # maybe -(i+1)
 					config.append('1')
 					config.extend(['0'] * (i - 1) )
 					i = 1
@@ -95,16 +138,21 @@ def number_of_uglies(list_of_num):
 			total += 1
 	return total
 
-data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
 
-# with open(sys.argv[1],'r') as input_file:
-with open(data_file, 'r') as input_file:
-	data = [x.strip('\n') for x in input_file.read().split('\n') if x]
+try:
+	data_file = os.path.dirname(os.path.realpath(__file__)) + "\\data"
+	with open(data_file, 'r') as input_file:
+		data = [x.strip('\n') for x in input_file.read().split('\n') if x]
+except IOError:
+	with open(sys.argv[1], 'r') as input_file:
+		data = [x.strip('\n') for x in input_file.read().split('\n') if x]
 
 for x in data:
-	num_combos = generate_num_combos(x)
-	sums = generate_arithmetic(num_combos)
-	#print sums,
-	print number_of_uglies(sums)
-
+	#print x
+	if len(x) == 1:
+		print number_of_uglies( [int(x)] )
+	else:
+		num_combos = generate_num_combos( x )
+		sums = generate_arithmetic(num_combos)
+		print number_of_uglies(sums)
 
