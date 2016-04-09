@@ -5,19 +5,21 @@
 @time - 6:04 PM
 @url - https://www.codeeval.com/open_challenges/42/
 
-did not receive all credit, not sure what areas are wrong.
+did not receive all credit, not sure what areas are wrong. The inputs provided
+	yielded correct answers
 
 """
 
 import os
 import sys
 
-def generate_num_combos(number):
+def generate_num_maps(number):
 	"""
 	ALL EXAMPLES DONE WITH NUMBER = 7
 	:param number:
-	:return: a list of all number configurations that will be used to add
-				and/or subtract
+	:return: a list of all number indexes used for making equations
+				if number == 12345674231
+				ie, [7,3,1] == 1234567 + 423 + 1
 	"""
 	len_num = len(str(number))
 	number_pre_premutations = [[str(len_num)],[str(len_num - 1), '1']] # initializes with [7,61]
@@ -61,22 +63,21 @@ def generate_num_combos(number):
 	return real_num_perms
 
 def combinations_of_perms(_list):
+	# Generate permutations of the generate_num_maps indexes
 	all_perms = [_list[0]]
 	for elements in _list[1:]:
-		# if len(elements) == 1:
-		# 	all_perms.append(elements)
-		# 	continue
-		last = None
 		# skip successive numbers
 		for x in xrange(len(elements)):
 			add = elements[x:] + elements [:x]
 			if add not in all_perms:
 				all_perms.append( add )
-			last = elements[x]
 
 	return all_perms
 
 def change_index_to_actual_numbers(index_perms, number):
+	# replace the indexes with its respective numbers
+	#	... theres probably a better way to do this number generation
+	#		I'll revisit later and see if I cant do it with better code
 	real_num_perms = [[number]]
 	for element in index_perms[1:]:
 		# skip first one because its the entire number
@@ -90,7 +91,8 @@ def change_index_to_actual_numbers(index_perms, number):
 
 
 def generate_arithmetic(combinations):
-	# only doing addition and subtration
+	# handles the array of subtraction and addition for each equation
+	# [1,0,1,1] == 12 + 43 - 2 + 34 + 23
 	# arithmetic combinations will be generated with 1 for + and 0 for -
 	sum_of_combos = []
 	for sets_of_nums in combinations:
@@ -101,13 +103,12 @@ def generate_arithmetic(combinations):
 		while config != finished:
 			if config[-i] == '0':
 				sum_of_combos.append( arithmetic(sets_of_nums, config) )
-				#print config,
 				if i == 1:
 					# Means the subtraction and addition operation has already been
 					#	preformed.
 					config[-1] = '1'
 				else:
-					config = config[:-i] # maybe -(i+1)
+					config = config[:-i]
 					config.append('1')
 					config.extend(['0'] * (i - 1) )
 					i = 1
@@ -148,11 +149,10 @@ except IOError:
 		data = [x.strip('\n') for x in input_file.read().split('\n') if x]
 
 for x in data:
-	#print x
 	if len(x) == 1:
 		print number_of_uglies( [int(x)] )
 	else:
-		num_combos = generate_num_combos( x )
+		num_combos = generate_num_maps(x)
 		sums = generate_arithmetic(num_combos)
 		print number_of_uglies(sums)
 
