@@ -3,7 +3,7 @@
 @author - JOHNATHAN
 @date - 6/21/2016
 @time - 1:12 PM
-
+@url - https://www.codeeval.com/open_challenges/126/
 """
 class DNA():
 	def __init__(self, segment='', mismatch=0, dna=''):
